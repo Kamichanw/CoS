@@ -374,6 +374,59 @@ def chef_decode(
     return current_generated_ids[:, initial_len : initial_len + max_new_tokens]
 
 
+@torch.no_grad()
+def standard_decode(
+    initial_prompt_text: str,
+    max_new_tokens: int,
+    gamma: int,
+    ensemble_target: Literal["logits", "probs", "raw_logits"] = "logits",
+    ensemble_fn: Optional[Callable] = None,
+):
+    global draft_model, target_model, tokenizer, device
+    prompt_input_ids = tokenizer.encode(initial_prompt_text, return_tensors="pt").to(
+        device
+    )
+    current_generated_ids = prompt_input_ids.clone()
+    initial_len = current_generated_ids.shape[1]
+
+    generated_token_count = 0
+
+    while generated_token_count < max_new_tokens:
+
+        drafted_tokens_tensor = propose(current_generated_ids, draft_model, gamma=1, return_logits=True)
+        _, draft_logits = drafted_tokens_tensor
+        target_tokens_tensor = propose(current_generated_ids, target_model, gamma=1, return_logits=True)
+        _, target_logits = target_tokens_tensor
+
+        if ensemble_fn is not None:
+            ensemble_logits_or_probs = ensemble(
+                draft_logits, target_logits, ensemble_target, ensemble_fn
+            )
+            next_token = torch.argmax(
+                ensemble_logits_or_probs[:, -1, :], dim=-1, keepdim=True
+            )
+        else:
+            raise ValueError(
+                "Ensemble function is required for standard decode, please provide a valid ensemble_fn."
+            )
+        
+        current_generated_ids = torch.cat(
+            [current_generated_ids, next_token], dim=1
+        )
+        generated_token_count += 1
+
+        # 4. final check: whether we have enough tokens or hit EOS
+        if generated_token_count >= max_new_tokens:
+            break
+        if (
+            tokenizer.eos_token_id is not None
+            and tokenizer.eos_token_id == next_token.item()
+        ):
+            break
+
+    return current_generated_ids[:, initial_len : initial_len + max_new_tokens]
+
+
 def warpped_sampling(
     decode_type,
     prompts,
@@ -393,8 +446,7 @@ def warpped_sampling(
     elif decode_type == "sd":
         decode_method = speculative_decode
     else:
-        raise ValueError(f"decode_type {decode_type} not supported")
-        # decode_method = standard_decode
+        decode_method = standard_decode
 
     results = {
         "generated": [],

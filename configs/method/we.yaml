@@ -4,6 +4,7 @@ defaults:
 
 type: standard
 
+gamma: null
 extra_model: null
 lambda: null
 ensemble_target: probs
