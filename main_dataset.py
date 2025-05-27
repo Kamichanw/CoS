@@ -275,6 +275,7 @@ def chef_decode(
     ensemble_target: Literal["logits", "probs", "raw_logits"],
     ensemble_fn: Callable,
 ):
+    print("Using CHEF decoding method")
     global draft_model, target_model, tokenizer, device
     prompt_input_ids = tokenizer.encode(initial_prompt_text, return_tensors="pt").to(
         device
@@ -297,26 +298,24 @@ def chef_decode(
         else:
             verifier, proposer = proposer, verifier
             verifier_gamma, proposer_gamma = proposer_gamma, verifier_gamma
-            new_drafted_tokens, new_draft_logits = propose(
-                torch.cat([current_generated_ids, cached_proposals], dim=1),
-                proposer,
-                proposer_gamma - cached_proposals.shape[1],
-                return_logits=True
-            )
-            drafted_tokens_tensor = torch.cat(
-                [
-                    cached_proposals,
-                    new_drafted_tokens,
-                ],
-                dim=1,
-            )
-            draft_logits = torch.cat(
-                [
-                    cached_logits,
-                    new_draft_logits,
-                ],
-                dim=1,
-            )
+            if proposer_gamma - cached_proposals.shape[1] > 0:
+                new_drafted_tokens, new_draft_logits = propose(
+                    torch.cat([current_generated_ids, cached_proposals], dim=1),
+                    proposer,
+                    proposer_gamma - cached_proposals.shape[1],
+                    return_logits=True
+                )
+                drafted_tokens_tensor = torch.cat(
+                    [
+                        cached_proposals,
+                        new_drafted_tokens,
+                    ],
+                    dim=1,
+                )
+                draft_logits = new_draft_logits
+            else:
+                drafted_tokens_tensor = cached_proposals
+                draft_logits = cached_logits
 
         # 2. verification phase: target model processes original sequence + drafted tokens
         target_logits, bonus_token = score(
@@ -326,7 +325,7 @@ def chef_decode(
         )
         ensemble_logits_or_probs = ensemble(
             draft_logits=draft_logits,
-            target_logits=target_logits,
+            target_logits=target_logits[:, :-1, :],
             ensemble_target=ensemble_target,
             ensemble_fn=ensemble_fn,
         )
@@ -372,6 +371,7 @@ def chef_decode(
 
 
 def warpped_sampling(
+    decode_type,
     prompts,
     enable_test_speed,
     max_new_tokens,
@@ -383,6 +383,14 @@ def warpped_sampling(
         starter, ender = torch.npu.Event(enable_timing=True), torch.npu.Event(
             enable_timing=True
         )
+    
+    if decode_type == "chef":
+        decode_method = chef_decode
+    elif decode_type == "sd":
+        decode_method = speculative_decode
+    else:
+        raise ValueError(f"decode_type {decode_type} not supported")
+        # decode_method = standard_decode
 
     results = {
         "generated": [],
@@ -394,7 +402,7 @@ def warpped_sampling(
     for prompt in tqdm(prompts, desc="Processing prompts"):
         if enable_test_speed:
             starter.record()
-            output = speculative_decode(
+            output = decode_method(
                 initial_prompt_text=prompt,
                 max_new_tokens=max_new_tokens,
                 gamma=gamma,
@@ -410,7 +418,7 @@ def warpped_sampling(
                 results["num_tokens"][-1] / results["total_time"][-1]
             )
         else:
-            output = speculative_decode(
+            output = decode_method(
                 initial_prompt_text=prompt,
                 max_new_tokens=max_new_tokens,
                 gamma=gamma,
@@ -517,10 +525,11 @@ def main(cfg: DictConfig):
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    target_model = AutoModelForCausalLM.from_pretrained(target_model_path).to(device)
-    draft_model = AutoModelForCausalLM.from_pretrained(draft_model_path).to(device)
+    target_model = AutoModelForCausalLM.from_pretrained(target_model_path, torch_dtype=torch.float16).to(device)
+    draft_model = AutoModelForCausalLM.from_pretrained(draft_model_path, torch_dtype=torch.float16).to(device)
 
     results = warpped_sampling(
+        cfg.method.type,
         prompts,
         enable_test_speed=cfg.test_speed,
         max_new_tokens=cfg.method.generate.max_new_tokens,

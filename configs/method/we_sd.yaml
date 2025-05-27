@@ -3,6 +3,7 @@ defaults:
   - we
   - _self_
 
+type: sd
 
 # should be an integer, it applied to the last model given in extra_model
 gamma: null
