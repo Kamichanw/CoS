@@ -553,7 +553,7 @@ def process_result(cfg, results, evaluate_func):
     pprint(results_stats)
 
     if cfg.save_path:
-        write_json(cfg.save_path, results)
+        write_json(cfg.save_path, results_stats)
 
 
 @hydra.main(version_base=None, config_path="configs", config_name="default")

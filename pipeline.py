@@ -22,7 +22,7 @@ def create_task(task_cfg, run_dir):
     with open(f"{run_dir}/cmd.sh", "w") as f:
         f.write(" ".join(shlex.quote(arg) for arg in command) + f" >{log_path} 2>{error_path}")
     with open("./cmds.sh", "a") as f:
-        f.write(" ".join(shlex.quote(arg) for arg in command) + f" >{log_path} 2>{error_path}" + "\n")
+        f.write(" ".join(shlex.quote(arg) for arg in command) + "\n")
     return dict(
         cmd=command,
         stdin=subprocess.DEVNULL,
