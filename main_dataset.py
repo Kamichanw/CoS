@@ -337,6 +337,10 @@ def chef_decode(
         )
         all_drafted_accepted = num_accepted_tokens == drafted_tokens_tensor.shape[1]
         if all_drafted_accepted:
+            current_generated_ids = torch.cat(
+                [current_generated_ids, drafted_tokens_tensor], dim=1
+            )
+            generated_token_count += drafted_tokens_tensor.shape[1]
             cached_proposals = bonus_token
             cached_logits = ensemble_logits_or_probs[:, -1, :].unsqueeze(1)
         else:
