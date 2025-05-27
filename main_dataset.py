@@ -275,7 +275,6 @@ def chef_decode(
     ensemble_target: Literal["logits", "probs", "raw_logits"],
     ensemble_fn: Callable,
 ):
-    print("Using CHEF decoding method")
     global draft_model, target_model, tokenizer, device
     prompt_input_ids = tokenizer.encode(initial_prompt_text, return_tensors="pt").to(
         device
@@ -510,7 +509,7 @@ def preprocess_cfg(cfg):
             warnings.warn(
                 "More than one models are provided, we will override ensemble_fn to (...) / num_total_models"
             )
-            if cfg.method.ensemble_target in ["logits", "raw-logits"]:
+            if cfg.method.ensemble_target in ["logits", "raw_logits"]:
                 cfg.method["ensemble_fn"] = (
                     f"${{eval:'lambda logits: sum(logits) / {len(extra_models) + 1}'}}"
                 )
@@ -523,9 +522,9 @@ def preprocess_cfg(cfg):
                     f"ensemble_target {cfg.method.ensemble_target} not supported"
                 )
         else:
-            if cfg.method.ensemble_target in ["logits", "raw-logits"]:
+            if cfg.method.ensemble_target in ["logits", "raw_logits"]:
                 cfg.method["ensemble_fn"] = (
-                    f"${{eval:'lambda logits: logits[0] - {cfg.method['alpha']} * logits[1]'}}"
+                    f"${{eval:'lambda logits: logits[1] - {cfg.method['alpha']} * logits[0]'}}"
                 )
             elif cfg.method.ensemble_target in ["probs"]:
                 cfg.method["ensemble_fn"] = (

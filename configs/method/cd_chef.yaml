@@ -2,3 +2,5 @@ defaults:
   - default
   - cd_sd
   - _self_
+
+type: chef

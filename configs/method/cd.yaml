@@ -2,12 +2,9 @@ defaults:
   - default
   - _self_
 
+type: standard
 
-amateur_model: null
-alpha: 0.1
-
-llm:
-  model: ${path_join:${oc.env:MODEL_PATH},${..model}}
-  extra_model: ${path_join:${oc.env:MODEL_PATH},${..amateur_model}}
-  ensemble_fn: ${eval:'lambda logits:logits[0] - ${..alpha} * logits[1]'}
-  ensemble_target: raw-logits
+gamma: null
+extra_model: null
+alpha: null
+ensemble_target: raw_logits
