@@ -1,11 +1,9 @@
 defaults:
   - default
-  - ensemble
+  - we
   - _self_
 
 
 # should be an integer, it applied to the last model given in extra_model
 gamma: null
-
-llm:
-  num_speculative_tokens: ${..gamma}
+ensemble_target: probs

@@ -15,12 +15,14 @@ def create_task(task_cfg, run_dir):
     log_path = f"{run_dir}/result.log"
     error_path = f"{run_dir}/error.log"
     command = (
-        ["nohup", "python", "./main_dataset.py", f"method={task_cfg.method.pop('name')}"]
+        ["python", "./main_dataset.py", f"method={task_cfg.method.pop('name')}"]
         + flatten_dict(task_cfg)
         + [f"hydra.run.dir={run_dir}"]
     )
     with open(f"{run_dir}/cmd.sh", "w") as f:
-        f.write(" ".join(shlex.quote(arg) for arg in command))
+        f.write(" ".join(shlex.quote(arg) for arg in command) + f" >{log_path} 2>{error_path}")
+    with open("./cmds.sh", "a") as f:
+        f.write(" ".join(shlex.quote(arg) for arg in command) + f" >{log_path} 2>{error_path}" + "\n")
     return dict(
         cmd=command,
         stdin=subprocess.DEVNULL,
@@ -50,40 +52,47 @@ def main(cfg: DictConfig):
     ]
     task_idx, total_tasks = 0, len(task_cfg_queue)
 
+    if os.path.exists("./cmds.sh"):
+        os.remove("./cmds.sh")
+
     print(f"Starting running {total_tasks} tasks...")
-    while task_idx < total_tasks:
-        task_cfg = task_cfg_queue.pop(0)
+    for task_idx, task_cfg in enumerate(task_cfg_queue):
         task_dir = os.path.join(run_dir, f"task_{task_idx+1}")
-        task = create_task(task_cfg, run_dir=task_dir)
-        try:
-            ret = task_manager.dispatch(
-                **task,
-                requires_memory_per_device=cfg.requires_memory,
-                min_devices=cfg.wait_n_devices,
-            )
-            print(
-                f"Task {task_idx + 1} is assigned to devices {', '.join(map(str,ret))}"
-            )
-            task_idx += 1
-        except Exception:
-            import traceback
+        create_task(task_cfg, run_dir=task_dir)
 
-            print(f"Error occurred when running on the {task_idx+1}th task:")
-            traceback.print_exc(file=task["stderr"])
-            raise
+    # while task_idx < total_tasks:
+    #     task_cfg = task_cfg_queue.pop(0)
+    #     task_dir = os.path.join(run_dir, f"task_{task_idx+1}")
+    #     task = create_task(task_cfg, run_dir=task_dir)
+    #     try:
+    #         ret = task_manager.dispatch(
+    #             **task,
+    #             requires_memory_per_device=cfg.requires_memory,
+    #             min_devices=cfg.wait_n_devices,
+    #         )
+    #         print(
+    #             f"Task {task_idx + 1} is assigned to devices {', '.join(map(str,ret))}"
+    #         )
+    #         task_idx += 1
+    #     except Exception:
+    #         import traceback
 
-        for idx, ret_code in enumerate(task_manager.task_status()):
-            if ret_code is not None:
-                if ret_code != 0:
-                    print_once(
-                        task_idx,
-                        f"The {idx+1}th task exited with non-zero code, see {task_dir} for full information.",
-                    )
-                else:
-                    print_once(
-                        task_idx,
-                        f"The {idx+1}th task ended successfully, see {task_dir} for results.",
-                    )
+    #         print(f"Error occurred when running on the {task_idx+1}th task:")
+    #         traceback.print_exc(file=task["stderr"])
+    #         raise
+
+    #     for idx, ret_code in enumerate(task_manager.task_status()):
+    #         if ret_code is not None:
+    #             if ret_code != 0:
+    #                 print_once(
+    #                     task_idx,
+    #                     f"The {idx+1}th task exited with non-zero code, see {task_dir} for full information.",
+    #                 )
+    #             else:
+    #                 print_once(
+    #                     task_idx,
+    #                     f"The {idx+1}th task ended successfully, see {task_dir} for results.",
+    #                 )
 
 
 if __name__ == "__main__":

@@ -1,7 +1,4 @@
 defaults:
   - default
-  - ensemble_sd
+  - we_sd
   - _self_
-
-
-gamma: null # should be a list of integers

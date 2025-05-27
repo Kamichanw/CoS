@@ -108,13 +108,13 @@ def preprocess_config(cfg: DictConfig) -> DictConfig:
     common_args = {k: cfg[k] for k in common_keys & default_keys}
 
     # re-calculate method.llm.gpu_memory_utilization
-    total_memory_capacity = set(query_gpu_memory())
+    total_memory_capacity = [65536]
     assert (
         len(total_memory_capacity) == 1
     ), "All devices should have the same capacity. Different devices with different capacities are not supported yet."
     total_memory_capacity = next(iter(total_memory_capacity))
 
-    gpu_memory_utilization = cfg.requires_memory / total_memory_capacity
+    gpu_memory_utilization = 60000 / total_memory_capacity
 
     cfg.update(
         {
@@ -122,7 +122,6 @@ def preprocess_config(cfg: DictConfig) -> DictConfig:
                 "method": OmegaConf.merge(
                     dict(
                         name=method,
-                        llm=dict(gpu_memory_utilization=gpu_memory_utilization),
                     ),
                     cfg[method] if method in cfg else {},
                 ),
@@ -174,7 +173,7 @@ class TaskManager:
 
         return avail_devices
 
-    def task_status(self) -> List[int | None]:
+    def task_status(self) -> List[Union[int, None]]:
         """
         Get the return code of all task processes. For a task, if it ends successfully, returns 0.
         If it fails, returns a non-zero value. If it is running, returns None.

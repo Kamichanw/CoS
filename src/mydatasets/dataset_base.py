@@ -32,7 +32,7 @@ class PostInitMeta(ABCMeta):
             instance.size = len(instance.dataset)
 
         instance.dataset = instance.dataset.shuffle(seed=42).select(
-            range(min(instance.size.value, len(instance.dataset)))
+            range(min(instance.size, len(instance.dataset)))
         )
 
         return instance
