@@ -1,6 +1,0 @@
-run_name: null
-visible_devices: null
-wait_devices_timeout: 600
-requires_memory: ${eval:${gpu_total_memory:} * 0.9} 
-wait_n_devices: 1
-methods: []

@@ -1,6 +1,0 @@
-defaults:
-  - default
-  - we_sd
-  - _self_
-
-type: chef

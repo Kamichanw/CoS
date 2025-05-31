@@ -1,8 +1,0 @@
-defaults:
-  - default
-  - cd
-  - _self_
-
-type: sd
-
-gamma: 5

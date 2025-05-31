@@ -1,7 +1,0 @@
-defaults:
-  - default
-  - _self_
-
-
-draft_model: null
-gamma: 5
