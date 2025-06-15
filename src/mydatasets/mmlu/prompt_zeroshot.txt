@@ -1,6 +1,0 @@
-Question: {{question}}
-
-Choices:
-{{choices_str}}
-
-Answer: Let's think step by step.

@@ -1,0 +1,25 @@
+<think>
+Step 1: Identify all the data points in the stem and leaf plot.
+From the stem and leaf plot, the points per game are as follows:
+- 21
+- 24
+- 34, 35
+- 49
+- 56, 57, 58
+- 66, 66
+- 75, 76
+- 84, 85, 85, 85
+- 90
+
+Step 2: Arrange the data points in ascending, descending or random order.
+The points in ascending order are:
+21, 24, 34, 35, 49, 56, 57, 58, 66, 66, 75, 76, 84, 85, 85, 85, 90
+
+Step 3: Find the median.
+Since there are 17 data points (an odd number), the median is the middle number when ordered.
+In this case, the 9th number in the ordered list is the median.
+The 9th number is 56.
+
+Therefore, the median number of points scored per game is 56.
+
+</think><answer> $\boxed{56}$ </answer> 

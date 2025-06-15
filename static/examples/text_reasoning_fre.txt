@@ -1,0 +1,75 @@
+<think>
+To solve the equation \(\frac{x-2}{x^2+4x+1} = \frac{x-5}{x^2-10x}\), we first eliminate the denominators by cross-multiplying:
+
+\[
+(x-2)(x^2-10x) = (x-5)(x^2+4x+1)
+\]
+
+Expanding both sides, we get:
+
+\[
+x^3 - 10x^2 - 2x^2 + 20x = x^3 + 4x^2 + x - 5x^2 - 20x - 5
+\]
+
+Simplifying both sides, we have:
+
+\[
+x^3 - 12x^2 + 20x = x^3 - x^2 - 19x - 5
+\]
+
+Subtracting \(x^3\) from both sides, we get:
+
+\[
+-12x^2 + 20x = -x^2 - 19x - 5
+\]
+
+Rearranging all terms to one side, we have:
+
+\[
+-12x^2 + x^2 + 20x + 19x + 5 = 0
+\]
+
+Simplifying further, we get:
+
+\[
+-11x^2 + 39x + 5 = 0
+\]
+
+This is a quadratic equation in the form \(ax^2 + bx + c = 0\), where \(a = -11\), \(b = 39\), and \(c = 5\). The sum of the solutions of a quadratic equation \(ax^2 + bx + c = 0\) is given by \(-\frac{b}{a}\). Therefore, the sum of the solutions is:
+
+\[
+-\frac{39}{-11} = \frac{39}{11}
+\]
+
+We need to check if the solutions satisfy the original equation and the denominators. The solutions to the quadratic equation are:
+
+\[
+x = \frac{-39 \pm \sqrt{39^2 - 4(-11)(5)}}{2(-11)} = \frac{-39 \pm \sqrt{1521 + 220}}{-22} = \frac{-39 \pm \sqrt{1741}}{-22}
+\]
+
+The solutions are:
+
+\[
+x = \frac{39 \mp \sqrt{1741}}{22}
+\]
+
+We need to ensure that these solutions do not make the denominators zero. The denominators are \(x^2 + 4x + 1\) and \(x^2 - 10x\). Substituting \(x = \frac{39 \mp \sqrt{1741}}{22}\) into these denominators, we check:
+
+For \(x^2 + 4x + 1\):
+
+\[
+\left(\frac{39 \mp \sqrt{1741}}{22}\right)^2 + 4\left(\frac{39 \mp \sqrt{1741}}{22}\right) + 1 \neq 0
+\]
+
+For \(x^2 - 10x\):
+
+\[
+\left(\frac{39 \mp \sqrt{1741}}{22}\right)^2 - 10\left(\frac{39 \mp \sqrt{1741}}{22}\right) \neq 0
+\]
+
+Since the solutions do not make the denominators zero, they are valid. Therefore, the sum of all real solutions is:
+
+\[
+\boxed{\frac{39}{11}}
+\]
+</think><answer> $\frac{39}{11}$ </answer>

@@ -1,0 +1,13 @@
+<think>
+To find the median, I need to follow these steps:
+1. List all the values in ascending order.
+2. Identify the middle value(s).
+
+Let's list the values:
+20, 24, 20, 30, 34, 35, 40, 49, 50, 56, 57, 58, 60, 60, 66, 66, 70, 75, 76, 80, 85, 85, 85, 86, 90
+
+There are 25 values, so the median will be the 13th value in this ordered list.
+The 13th value is 60.
+
+Therefore, the median number of points scored per game is 60.
+</think><answer> $\boxed{60}$ </answer> 

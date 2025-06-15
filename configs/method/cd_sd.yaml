@@ -1,9 +1,0 @@
-defaults:
-  - default
-  - cd
-  - _self_
-
-gamma: 5
-
-llm:
-  num_speculative_tokens: ${..gamma}

@@ -1,6 +1,0 @@
-Q: {{question}}
-Which one of the four choices is correct about the question, (A), (B), (C) or (D)?
-Choices: 
-{{choices_str}}
-Let's think step by step. 
-A: 

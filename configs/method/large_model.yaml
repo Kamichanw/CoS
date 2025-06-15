@@ -1,6 +1,0 @@
-defaults:
-  - default
-  - _self_
-
-llm:
-  model: ${path_join:${oc.env:MODEL_PATH},${..model}}

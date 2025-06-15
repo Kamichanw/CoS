@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="LMM-R1: Empowering 3B LMMs with Strong Reasoning Abilities Through Two-Stage Rule-Based RL">
+  <meta property="og:title" content="LMM-R1: Empowering 3B LMMs with Strong Reasoning Abilities Through Two-Stage Rule-Based RL"/>
+  <meta property="og:description" content="A novel two-stage rule-based reinforcement learning framework that enhances reasoning capabilities in compact 3B-parameter Large Multimodal Models"/>
+  <meta property="og:url" content="https://yourwebsite.com/lmm-r1"/>
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/image/lmm-r1-banner.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+
+  <meta name="twitter:title" content="LMM-R1: Enhancing Multimodal Reasoning">
+  <meta name="twitter:description" content="Boosting 3B LMMs reasoning abilities through two-stage rule-based reinforcement learning">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="static/images/lmm-r1-banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="large multimodal models, reasoning, reinforcement learning, rule-based RL, multimodal, LMM">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>LMM-R1: Empowering 3B LMMs with Strong Reasoning Abilities</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- MathJax for rendering mathematical formulas -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+  
+  <style>
+    /* Tab content styles */
+    .tab-pane {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .tab-pane.is-active {
+      display: block;
+      opacity: 1;
+    }
+    
+    /* Make sure the notification boxes have consistent height */
+    .notification {
+      min-height: 200px;
+      overflow-y: auto;
+      max-height: 500px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      line-height: 1.5;
+      font-size: 0.9em;
+    }
+    
+    /* Loading indicator */
+    .loading {
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+      color: #888;
+    }
+    
+    /* Math formula styles */
+    .mjx-chtml {
+      display: inline-block;
+      margin: 2px 0;
+    }
+    
+    /* Ensure inline math doesn't break line height */
+    .mjx-chtml.MJXc-display {
+      margin: 1em 0;
+      padding: 0.5em 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    
+    /* Improve readability of math in dark notification boxes */
+    .notification .mjx-chtml {
+      color: #333;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">LMM-R1: Empowering 3B LMMs with Strong Reasoning Abilities Through Two-Stage Rule-Based RL</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="#" target="_blank">Yingzhe Peng</a><sup>1,4,*</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Gongrui Zhang</a><sup>1,*</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Miaosen Zhang</a><sup>1,*</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Zhiyuan You</a><sup>2</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Jie Liu</a><sup>2</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Qipeng Zhu</a><sup>3</sup>,</span>
+                <br>
+                <span class="author-block">
+                  <a href="#" target="_blank">Kai Yang</a><sup>4</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Xingzhong Xu</a><sup>4</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Xin Geng</a><sup>1</sup>,</span>
+                <span class="author-block">
+                  <a href="#" target="_blank">Xu Yang</a><sup>1,†</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Key Laboratory of New Generation Artificial Intelligence Technology and<br>Its Interdisciplinary Applications (Southeast University), Ministry of Education, China</span><br>
+              <span class="author-block"><sup>2</sup>The Chinese University of Hong Kong</span>
+              <span class="author-block"><sup>3</sup>Fudan University</span>
+              <span class="author-block"><sup>4</sup>Ant Group</span><br>
+              <span class="eql-cntrb"><small><sup>*</sup>Equal Contribution. <sup>†</sup>Corresponding Author</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Arxiv PDF link -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2503.07536" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- Supplementary PDF link -->
+              <!-- <span class="link-block">
+                <a href="static/pdfs/supplementary_material.pdf" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fas fa-file-pdf"></i>
+                </span>
+                <span>Supplementary</span>
+              </a>
+            </span> -->
+            <!-- Models -->
+            <span class="link-block">
+              <a href="https://huggingface.co/collections/VLM-Reasoner/lmm-r1-67d2a02518e5a69f35206bce" target="_blank"
+              class="external-link button is-normal is-rounded is-dark">
+              <span class="icon" style="vertical-align: middle; font-size: 20px;">🤗</span>
+              <span>Models and Datasets</span>
+            </a>
+            </span>
+            <!-- Datasets -->
+            <!-- Github link -->
+            <span class="link-block">
+              <a href="https://github.com/TideDra/lmm-r1" target="_blank"
+              class="external-link button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Code</span>
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+
+<!-- Teaser video-->
+<section class="hero teaser">
+<div class="container is-max-desktop">
+  <div class="hero-body">
+    <img src="static/images/model.jpg" alt="LMM-R1 Framework" width="100%">
+    <h2 class="subtitle has-text-centered">
+      LMM-R1 enhances reasoning in compact 3B-parameter Large Multimodal Models through a novel two-stage framework: Foundational Reasoning Enhancement followed by Multimodal Generalization Training.
+    </h2>
+  </div>
+</div>
+</section>
+<!-- End teaser video -->
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+<div class="container is-max-desktop">
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-four-fifths">
+      <h2 class="title is-3">Abstract</h2>
+      <div class="content has-text-justified">
+        <p>
+          Enhancing reasoning in Large Multimodal Models (LMMs) faces unique challenges from the complex interplay between visual perception and logical reasoning, particularly in compact 3B-parameter architectures where architectural constraints limit reasoning capacity and modality alignment. 
+          While rule-based reinforcement learning (RL) excels in text-only domains, its multimodal extension confronts two critical barriers: (1) data limitations due to ambiguous answers and scarce complex reasoning examples, and (2) degraded foundational reasoning induced by multimodal pretraining. 
+        </p>
+        <p>
+          To address these challenges, we propose <b>LMM-R1</b>, a two-stage framework adapting rule-based RL for multimodal reasoning through <b>Foundational Reasoning Enhancement (FRE)</b> followed by <b>Multimodal Generalization Training (MGT)</b>. The FRE stage first strengthens reasoning abilities using text-only data with rule-based RL, then the MGT stage generalizes these reasoning capabilities to multimodal domains.
+        </p>
+        <p>
+          Experiments on Qwen2.5-VL-Instruct-3B demonstrate that LMM-R1 achieves 4.83% and 4.5% average improvements over baselines in multimodal and text-only benchmarks, respectively, with a 3.63% gain in complex Football Game tasks. These results validate that text-based reasoning enhancement enables effective multimodal generalization, offering a data-efficient paradigm that bypasses costly high-quality multimodal training data.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- End paper abstract -->
+
+
+<!-- Paper Motivation -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Motivation</h2>
+      <p>
+        <!-- Paper Motivation -->
+      <div class="content has-text-justified">
+        <p>
+          Recent advances in Large Language Models have shown promising results in reasoning tasks. However, extending these capabilities to multimodal domains presents unique challenges, particularly for compact 3B-parameter Large Multimodal Models (LMMs). These models face two critical limitations:
+        </p>
+
+        <div class="columns">
+          <div class="column">
+            <div class="box">
+              <h4 class="subtitle is-5">Data Limitations</h4>
+              <p>
+                Rule-based RL requires uniquely verifiable answers for accurate rewards. However, multimodal tasks often involve answer ambiguity (e.g., image descriptions, visual QA). Additionally, while perception-focused data is abundant, complex reasoning examples are limited, potentially leading to insufficient reasoning capabilities.
+              </p>
+            </div>
+          </div>
+          
+          <div class="column">
+            <div class="box">
+              <h4 class="subtitle is-5">Weak Foundational Reasoning</h4>
+              <p>
+                Models trained on multimodal data often show degraded performance on text-only tasks. Some LMMs using Chain-of-Thought actually experience performance degradation on multimodal benchmarks - a problem that is amplified in smaller 3B-parameter architectures due to their limited capacity.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          To address these challenges, we propose LMM-R1, a two-stage rule-based RL framework that first strengthens foundational reasoning abilities using text-only data before generalizing to multimodal domains. This approach overcomes the architectural constraints of 3B LMMs while avoiding the need for extensive multimodal training data.
+        </p>
+      </div>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- FRE Stage -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">LMM-R1: Two-Stage Training Framework</h2>
+      <div class="columns">
+        <div class="column">
+          <div class="box" style="height: 100%;">
+            <h4 class="subtitle is-5">Foundational Reasoning Enhancement (FRE)</h4>
+            <p>
+              The FRE stage focuses on enhancing the model's foundational reasoning capabilities through two approaches:
+            </p>
+            <ul>
+              <li><strong>Text-Only Enhancement:</strong> Uses large-scale, high-quality verifiable text-only data for rule-based RL training to develop strong reasoning foundations</li>
+              <li><strong>Foundational Skills:</strong> Builds core reasoning abilities that serve as a basis for multimodal learning</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="column">
+          <div class="box" style="height: 100%;">
+            <h4 class="subtitle is-5">Multimodal Generalization Training (MGT)</h4>
+            <p>
+              The MGT stage extends reasoning capabilities across diverse multimodal domains:
+            </p>
+            <ul>
+              <li><strong>General Domain:</strong> Includes geometric reasoning and perception-reasoning balanced tasks across 20+ datasets</li>
+              <li><strong>Agent Domain:</strong> Focuses on sequential decision-making tasks like Sokoban planning and football game scenarios</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Results</h2>
+      <p>
+        We evaluate LMM-R1 on a variety of multimodal and text-only benchmarks.
+      </p>
+      <div class="content has-text-justified">
+        <p>
+          LMM-R1 achieves significant performance improvements across both multimodal and text-only reasoning benchmarks. Our two-stage approach demonstrates remarkable effectiveness: the Foundational Reasoning Enhancement (FRE) stage using text-only data improves reasoning capabilities by 4.29% on text-only tasks, while the subsequent Multimodal Generalization Training (MGT) stage successfully transfers these enhanced reasoning abilities to multimodal contexts. The MGT-PerceReason model achieves a 4.83% average improvement on multimodal benchmarks compared to the baseline, with particularly strong gains on reasoning-intensive tasks. Notably, our approach effectively addresses the typical trade-off between reasoning and perception capabilities, enabling simultaneous improvement in both areas without the need for extensive high-quality multimodal training data.
+        </p>
+      </div>
+      
+      <img src="static/images/result_table.png" alt="Result tables" width="100%">
+    </div>
+  </div>
+</section>
+<!-- FRE 效果 -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Foundational Reasoning Enhancement</h2>
+      <div class="box mt-5">
+        <h4 class="subtitle is-4">Text-Only Enhancement (FRE-Text) 📚</h4>
+        <p>
+          FRE-Text demonstrates significant improvements in reasoning capabilities:
+        </p>
+        <ul>
+          <li>📈 4.29% overall enhancement in text-only performance</li>
+          <li>👑 Strong transfer to multimodal reasoning: 5.34% gain on OlympiadBench</li>
+          <li>🎯 Text-only Data can improve multimodal reasoning performance 3.23%</li>
+        </ul>
+      </div>
+
+      <div class="box mt-5">
+        <h4 class="subtitle is-4">Multimodal Enhancement (FRE-Multi) 🖼️</h4>
+        <p>
+          FRE-Multi shows strong visual capabilities but with reasoning trade-offs:
+        </p>
+        <ul>
+          <li>👁️ 7.36% improvement on MM-Star visual tasks and 3.5% gain on MathVista general multimodal tasks</li>
+          <li>⚠️ Slight decline in pure reasoning tasks</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MGT 泛化效果 -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Multimodal Generalization Training</h2>
+      <p>
+        We continue rule-based RL training in three distinct domains: geometry-focused visual reasoning, perception-reasoning balanced tasks, and agent-based sequential decision making, demonstrating strong generalization capabilities across different multimodal scenarios.
+      </p>
+
+      <div class="box mt-5">
+        <h4 class="subtitle is-4">Geometry Domain (MGT-Geo) 📐</h4>
+        <p>
+          MGT-Geo demonstrates exceptional performance in geometry-specific tasks, showing strong generalization capabilities:
+        </p>
+        <img src="static/images/mgt_geo_result.png" alt="MGT Geo Result" width="100%">
+        <ul>
+          <li>📊 3.35% improvement on MathVision geometry tasks across Analytic, Combinatorial, Metric and Solid geometry</li>
+          <li>🔄 2.97% improvement on MathVerse geometry problems from Text Domain to Vision Only categories</li>
+          <li>⚡ 11.68% gain in vision-only geometric reasoning compared to FRE-Text baseline</li>
+          <li>🎯 Significant improvements in both perception and reasoning capabilities for geometry-specific tasks</li>
+        </ul>
+      </div>
+
+      <div class="box mt-5">
+        <h4 class="subtitle is-4">Perception-Reasoning Balanced Domain (MGT-PerceReason) 🔍</h4>
+        <p>
+          MGT-PerceReason demonstrates balanced improvements across diverse multimodal tasks:
+        </p>
+        <ul>
+          <li>📈 1.6% average improvement across all multimodal benchmarks</li>
+          <li>👁️ 1.8% gain on MathVista visual understanding tasks</li>
+          <li>💡 2.88% enhancement on MM-Star general perception tasks</li>
+          <li>🔍 Maintains strong reasoning capabilities while improving visual perception</li>
+        </ul>
+      </div>
+
+      <div class="box mt-5">
+        <h4 class="subtitle is-4">Agent Domain (MGT-Sokoban) 🤖</h4>
+        <div class="columns">
+          <div class="column">
+            <img src="static/images/agent_results.png" alt="Agent domain evaluation results" style="height: 400px; width: auto;">
+          </div>
+          <div class="column">
+            <img src="static/images/sokoban_demo.gif" alt="Sokoban planning demonstration" style="height: 400px; width: auto;">
+            <p class="mt-2 is-size-7 has-text-grey">
+              Visualization of MGT-Sokoban solving a complex puzzle requiring multi-step planning
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <p>
+            MGT-Sokoban demonstrates remarkable capabilities in sequential decision-making and planning:
+          </p>
+          <ul>
+            <li>🎮 47.51% success rate on Sokoban tasks, outperforming baseline by 5.56%</li>
+            <li>🌟 18.99% success rate on unseen Football environment scenarios</li>
+            <li>🎲 Strong zero-shot transfer to novel agent environments</li>
+          </ul>
+        </div>
+      </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Image carousel -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+       <div class="item">
+        <img src="static/images/motivation.png" alt="Reasoning comparison on geometric problem"/>
+        <h2 class="subtitle has-text-centered">
+          Comparison of reasoning approaches on a geometric problem. LMM-R1 demonstrates superior reasoning by correctly applying the Pythagorean theorem.
+        </h2>
+      </div>
+    </div>
+  </div>
+  </div>
+  </section>
+  <!-- End image carousel -->
+<!-- Result tables with images -->
+
+
+<!-- Paper poster -->
+<section class="hero is-small is-light">
+<div class="hero-body">
+  <div class="container">
+    <h2 class="title">Overview</h2>
+
+    <iframe src="./static/pdfs/2503.07536v1.pdf" width="100%" height="550">
+    </iframe>
+    
+  </div>
+</div>
+</section>
+<!--End paper poster -->
+
+<!-- Model Output Examples (Text Format) -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Model Output Examples</h2>
+      <p class="content has-text-justified">
+        The following examples demonstrate how our two-stage training approach enhances reasoning capabilities across different types of problems. These examples highlight the differences in reasoning patterns between the baseline model and our enhanced models.
+      </p>
+      
+      <div class="tabs is-centered is-boxed" id="example-tabs">
+        <ul>
+          <li class="is-active" data-target="text-reasoning-tab"><a>Text-only Reasoning</a></li>
+          <li data-target="multimodal-reasoning-tab"><a>Multimodal Reasoning</a></li>
+          <li data-target="visual-perception-tab"><a>Visual Perception</a></li>
+          <li data-target="scientific-tab"><a>Scientific Understanding</a></li>
+        </ul>
+      </div>
+      
+      <div class="tab-content">
+        <!-- Text-only reasoning example -->
+        <div id="text-reasoning-tab" class="tab-pane is-active">
+          <div class="columns">
+            <div class="column">
+              <div class="box">
+                <h3 class="title is-5">Question</h3>
+                <p>How many positive integers b have the property that log_b 729 is a positive integer?</p>
+                
+                <h3 class="title is-5 mt-5">Baseline (Qwen2.5-VL)</h3>
+                <div class="content">
+                  <div class="notification baseline-content" data-file="static/examples/text_reasoning_baseline.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+                
+                <h3 class="title is-5 mt-5">FRE-Text</h3>
+                <div class="content">
+                  <div class="notification fre-content" data-file="static/examples/text_reasoning_fre.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Multimodal reasoning example -->
+        <div id="multimodal-reasoning-tab" class="tab-pane">
+          <div class="columns">
+            <div class="column">
+              <div class="box">
+                <h3 class="title is-5">Question</h3>
+                <p>What is the median number of points scored by the team per game?</p>
+                
+                <h3 class="title is-5 mt-5">Baseline (Qwen2.5-VL)</h3>
+                <div class="content">
+                  <div class="notification baseline-content" data-file="static/examples/multimodal_reasoning_baseline.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+                
+                <h3 class="title is-5 mt-5">FRE-Multi</h3>
+                <div class="content">
+                  <div class="notification fre-content" data-file="static/examples/multimodal_reasoning_fre.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Visual perception example -->
+        <div id="visual-perception-tab" class="tab-pane">
+          <div class="columns">
+            <div class="column">
+              <div class="box">
+                <h3 class="title is-5">Question</h3>
+                <p>How many vehicles in the image have wheels?</p>
+                
+                <h3 class="title is-5 mt-5">Baseline (Qwen2.5-VL)</h3>
+                <div class="content">
+                  <div class="notification baseline-content" data-file="static/examples/visual_perception_baseline.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+                
+                <h3 class="title is-5 mt-5">FRE-Multi</h3>
+                <div class="content">
+                  <div class="notification fre-content" data-file="static/examples/visual_perception_fre.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Scientific image example -->
+        <div id="scientific-tab" class="tab-pane">
+          <div class="columns">
+            <div class="column">
+              <div class="box">
+                <h3 class="title is-5">Question</h3>
+                <p>Question: What is the purpose of the left lane in the picture?<br><br>
+
+Choices:<br><br>
+
+(A) To show the results of immunofluorescent labeling<br><br>
+
+(B) To indicate the upper layer of synovial membranes<br><br>
+
+(C) To show the magnification of the image<br><br>
+
+(D) To display the results of immunohistochemistry</p>
+                
+                <h3 class="title is-5 mt-5">Baseline (Qwen2.5-VL)</h3>
+                <div class="content">
+                  <div class="notification baseline-content" data-file="static/examples/scientific_baseline.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+                
+                <h3 class="title is-5 mt-5">FRE-Multi</h3>
+                <div class="content">
+                  <div class="notification fre-content" data-file="static/examples/scientific_fre.txt">
+                    <!-- Content will be loaded from file -->
+                    <div class="loading">Loading...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content has-text-justified" style="margin-top: 20px;">
+        <p>
+          These examples highlight the distinct reasoning patterns that emerge from our different training approaches. The <strong>text-only trained model (FRE-Text)</strong> demonstrates significantly more detailed and thorough reasoning processes with:
+        </p>
+        <ul>
+          <li>Explicit step-by-step mathematical derivations</li>
+          <li>Comprehensive exploration of problem-solving approaches</li>
+          <li>Detailed explanations of underlying concepts and principles</li>
+          <li>Systematic verification of answers through multiple methods</li>
+        </ul>
+        <p>
+          In contrast, the <strong>multimodal trained model (FRE-Multi)</strong> exhibits more concise reasoning that prioritizes efficiency:
+        </p>
+        <ul>
+          <li>More direct identification of relevant visual elements</li>
+          <li>Streamlined reasoning processes with fewer intermediate steps</li>
+          <li>Greater focus on perceptual details rather than abstract reasoning</li>
+          <li>Simplified explanations that get to the answer more quickly</li>
+        </ul>
+        <p>
+          This pattern aligns with our research findings: text-only rule-based RL training significantly enhances reasoning depth and thoroughness, while multimodal training optimizes for efficient visual perception at the cost of detailed reasoning. Our two-stage approach successfully leverages these complementary strengths, enabling models to maintain strong reasoning capabilities while effectively processing visual information.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add JavaScript for tab functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tabs
+    const tabs = document.querySelectorAll('#example-tabs li');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    console.log('Tabs initialized:', tabs.length, 'tabs found');
+    
+    // Debug: Print all tabs and their active state
+    tabs.forEach(tab => {
+      console.log('Tab:', tab.getAttribute('data-target'), 
+                 'Active:', tab.classList.contains('is-active'));
+    });
+    
+    // Debug: Print all panes and their active state
+    tabPanes.forEach(pane => {
+      console.log('Pane:', pane.id, 
+                 'Active:', pane.classList.contains('is-active'),
+                 'Display:', window.getComputedStyle(pane).display);
+    });
+    
+    // Add click event to each tab
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Get target tab pane ID
+        const targetId = this.getAttribute('data-target');
+        console.log('Tab clicked:', targetId);
+        
+        // Deactivate all tabs and tab panes
+        document.querySelectorAll('#example-tabs li.is-active').forEach(t => t.classList.remove('is-active'));
+        document.querySelectorAll('.tab-pane.is-active').forEach(p => p.classList.remove('is-active'));
+        
+        // Activate clicked tab and corresponding pane
+        this.classList.add('is-active');
+        const targetPane = document.getElementById(targetId);
+        if (targetPane) {
+          targetPane.classList.add('is-active');
+          console.log('Activated pane:', targetId);
+          
+          // Re-render MathJax in the newly activated tab
+          if (window.MathJax) {
+            MathJax.typesetPromise([targetPane]).catch(err => console.error('MathJax error:', err));
+          }
+        } else {
+          console.error('Target pane not found:', targetId);
+        }
+      });
+    });
+    
+    // Load content from files
+    loadExampleContent();
+    
+    // Ensure MathJax is properly initialized
+    if (window.MathJax && typeof window.MathJax.typeset === 'function') {
+      window.MathJax.startup = {
+        ready: () => {
+          console.log('MathJax is loaded and ready');
+          MathJax.startup.defaultReady();
+        }
+      };
+    }
+  });
+  
+  // Function to load example content from files
+  function loadExampleContent() {
+    console.log('Loading example content from files');
+    
+    // Get all content containers
+    const contentContainers = document.querySelectorAll('[data-file]');
+    
+    // Load content for each container
+    contentContainers.forEach(container => {
+      const filePath = container.getAttribute('data-file');
+      console.log('Loading content from:', filePath);
+      
+      fetch(filePath)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to load file: ${filePath}`);
+          }
+          return response.text();
+        })
+        .then(text => {
+          // Process text to properly format mathematical formulas
+          // Replace LaTeX-style formulas with MathJax compatible format
+          // Inline math: $formula$ -> \(formula\)
+          // Display math: $$formula$$ -> \[formula\]
+          const processedText = text
+            .replace(/\$\$(.*?)\$\$/g, '\\[$1\\]')  // Display math
+            .replace(/\$(.*?)\$/g, '\\($1\\)');     // Inline math
+          
+          // Set the content with HTML to preserve formatting
+          container.innerHTML = processedText;
+          
+          // Typeset the math in this specific container
+          if (window.MathJax) {
+            MathJax.typesetPromise([container]).catch(err => console.error('MathJax error:', err));
+          }
+        })
+        .catch(error => {
+          console.error('Error loading file:', error);
+          container.innerHTML = `<p class="has-text-danger">Error loading content: ${error.message}</p>`;
+        });
+    });
+  }
+</script>
+  
+
+<!--BibTex citation -->
+<section class="section" id="BibTeX">
+<div class="container is-max-desktop content">
+  <h2 class="title">BibTeX</h2>
+  <pre><code>@article{peng2025lmmr1,
+  title={LMM-R1: Empowering 3B LMMs with Strong Reasoning Abilities Through Two-Stage Rule-Based RL},
+  author={Peng, Yingzhe and Zhang, Gongrui and Zhang, Miaosen and You, Zhiyuan and Liu, Jie and Zhu, Qipeng and Yang, Kai and Xu, Xingzhong and Geng, Xin and Yang, Xu},
+  journal={arXiv preprint},
+  year={2025}
+}</code></pre>
+</div>
+</section>
+<!--End BibTex citation -->
+
+
+<footer class="footer">
+<div class="container">
+  <div class="columns is-centered">
+    <div class="column is-8">
+      <div class="content">
+
+        <p>
+          This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+          You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+          Commons Attribution-ShareAlike 4.0 International License</a>.
+        </p>
+
+      </div>
+    </div>
+  </div>
+</div>
+</footer>
+
+</body>
+</html>

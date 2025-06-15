@@ -1,0 +1,11 @@
+We need to count the number of vehicles with wheels in the image. Let's identify them:
+
+1. The blue bus has wheels.
+2. The green motorcycle has wheels.
+3. The brown sedan has wheels.
+4. The yellow sedan has wheels.
+5. The cyan scooter has wheels.
+
+There are no other vehicles with wheels in the image.
+
+Therefore, the total number of vehicles with wheels is 5. 
