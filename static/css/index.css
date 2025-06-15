@@ -115,14 +115,18 @@ body {
 }
 
 .results-carousel .item {
-  margin: 5px;
-  overflow: hidden;
-  padding: 20px;
-  font-size: 0;
+    margin: 40px 200px; /* Apply 150px margin only to the left and right */
+    overflow: hidden;
+    padding: 0;
+    font-size: 0;
 }
 
 .results-carousel video {
   margin: 0;
+}
+
+.results-carousel .subtitle {
+    font-family: "Times New Roman", Times, serif;
 }
 
 .slider-pagination .slider-page {
