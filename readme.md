@@ -3,7 +3,7 @@
 <p align="center">
 <a href="https://arxiv.org/abs/2502.01662">
 <img alt="Static Badge" src="https://img.shields.io/badge/arXiv-2502.01662-red"></a>
-<a href="https://forjadeforest.github.io/LMM-R1-ProjectPage/">
+<a href="https://kamichanw.github.io/CoS/">
 <img alt="Static Badge" src="https://img.shields.io/badge/🌐-Project_Page-purple"> </a>
 <a href="https://kamichanw.github.io/publication/2025-02-01-cos">
 <img alt="Static Badge" src="https://img.shields.io/badge/📑-Blog-green"> </a>
@@ -13,6 +13,7 @@
 
 **Collaborative decoding via Speculation (CoS)** is a novel framework that accelerates the collaboration, e.g. weighted ensemble or contrastive decoding, of multiple LLMs without sacrificing performance. It achieves a performance boost of 1.11x to 2.23x over standard collaboration methods in two- or three-model configurations.
 
+<img src="assets/teaser.gif"  width="700" style="display: block; margin-left: auto; margin-right: auto;"/>
 
 ## News
 - [2025/5/29] 🚀 Our paper is renamed from *Speculative Ensemble: Fast Large Language Model Ensemble via Speculation* to **Fast Large Language Model Collaborative Decoding via Speculation**.
